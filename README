@@ -4,6 +4,10 @@ Simple concurrency with minimum mental overhead.
 
 Builds on `concurrent.futures`, and uses `return value` in a generator, limiting use to Python 3.3 and above.
 
+While this is not Pythonista specific, I use it with Pythonista, and would be happy to get some feedback on it. Please find the file on [Github](https://github.com/mikaelho/genr) if you want to play with it.
+
+Note that while this is working code that I use in my (simple) projects, it is work in progress, and is mainly intended to act as a concrete expression of my need for simpler async coding.
+
 ## Usage
 
 ### `yield` as a synchronization point
@@ -19,11 +23,11 @@ Functions and generators with `genr` decorator are executed in a new thread, wit
         
 Tasks 1 and 2, also decorated with `genr`, are executed in parallel. `yield` waits until they are both complete, after which task 3 gets to run.
 
-End of the function also acts as a collection  point, i.e. we wait for all called functions to complete before returning. Thus, in the example above, there is little practical difference whether `task3` is decorated with `genr` or not.
+End of the function also acts as a collection  point, i.e. we wait for all called functions to complete before returning. Thus, in the example above, there is little practical difference whether `task3` is executed in a separate thread or not.
 
-### Yielding results
+### `yield` to get results
 
-Decorated functions return a `concurrent.futures` `Future`, which can be used in the usual way. You can also use a Tornado-inspired way of `yield`ing the result, like in this classical example of retrieving several web pages in parallel:
+Decorated functions return a `concurrent.futures` `Future`, which can be used in the usual way, but for more readable code, we use a Tornado-inspired way of `yield`ing the result. The classical example below demonstrates retrieving several web pages in parallel:
 
     @genr
     def example2():
@@ -47,18 +51,23 @@ While this avoids having to create named one-line functions just for the sake of
                         
 ### Interrupting execution
         
-Aligned with `concurrent.futures`, `genr` plays nice with being `KeyboardInterrupt`ed. To wait for a `genr` thread to complete in the main thread, you can sinply wait for the result:
+Aligned with `concurrent.futures`, `genr` plays nice with being `KeyboardInterrupt`ed. To wait for a `genr` thread to complete in the main thread, you can simply wait for the result:
 
-    example().result()
+    main_function().result()
 
 ## Discussion
 
 ### Pros
 
+- Minimum cognitive load, no need to even understand the concept of a future.
+- Move quickly from need to implementation without needing to understand asyncio.
+- For relatively easy cases, functional need for parallel execution translates into a clear story in a single main function.
+- One decorator for the different use cases:
+    - Launching a single parallel function
+    - Multiple parallel threads
+    - Collecting results
+
 ### Cons
 
-- Minimum cognitive load, no need to even understand the concept of a future
-- No need to prime loops etc.
-- As effortless coexistence between sync and async code as possible
-- Same decorator for simple threads, multiple parallel threads with common completion, with results and without results
-- Timeouts for when things go wrong?
+- Likely to suffer from the same challenge that drove the creation of asyncio: it is not very visible whether a function is being called in a separate thread or not, which can lead to hard-to-see bugs.
+- Overloads generator semantics in a way that is not Pythonic.
