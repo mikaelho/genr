@@ -4,8 +4,6 @@ Simple concurrency with minimum mental overhead.
 
 Builds on `concurrent.futures`, and uses `return value` in a generator, limiting use to Python 3.3 and above.
 
-While this is not Pythonista specific, I use it with Pythonista, and would be happy to get some feedback on it. Please find the file on [Github](https://github.com/mikaelho/genr) if you want to play with it.
-
 Note that while this is working code that I use in my (simple) projects, it is work in progress, and is mainly intended to act as a concrete expression of my need for simpler async coding.
 
 ## Usage
