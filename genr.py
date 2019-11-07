@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 'https://pypi.org'
             )]
         print(results)
-        
+        asyncio.coroutine
         logout()
     
     @genr
