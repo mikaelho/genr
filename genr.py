@@ -1,8 +1,3 @@
-'''
-    
-    
-Test cf: https://stackoverflow.com/questions/25474204/checking-up-on-a-concurrent-futures-threadpoolexecutor/25474898#25474898
-'''
 
 import concurrent.futures as cf
 from functools import partial, wraps
@@ -96,7 +91,6 @@ if __name__ == '__main__':
                 'https://pypi.org'
             )]
         print(results)
-        asyncio.coroutine
         logout()
     
     @genr

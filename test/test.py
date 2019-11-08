@@ -108,6 +108,14 @@ class TestBasics(unittest.TestCase):
         for f in futures:
             self.assertTrue(f.done())
 
+    @genr
+    def error_raiser(self):
+        raise TypeError()
+
+    def test_exception_propagation(self):
+        with self.assertRaises(TypeError):
+            self.error_raiser().result()
+        
         
 if __name__ == "__main__":
     unittest.main()
